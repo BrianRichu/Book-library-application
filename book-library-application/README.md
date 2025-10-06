@@ -1,16 +1,139 @@
-# React + Vite
+# 📚 Book Library Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive web application built with **React**, **Vite**, and **Tailwind CSS** that allows users to **search for books**, **view details**, and **explore information** using the **Google Books API**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Project Overview
 
-## React Compiler
+The **Book Library Application** enables users to:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Search for books by title, author, or keyword  
+- View book details such as cover, title, author, publication date, and description  
+- Access links to the full book on Google Books  
+- Enjoy a clean, responsive UI accessible on any device  
 
-## Expanding the ESLint configuration
+The app is built as part of a **5-week learning project**, with weekly goals and commits tracked for continuous progress.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🗂️ Project Structure
+
+```
+book-library/
+├── src/
+│   ├── components/
+│   │   ├── SearchBar.jsx
+│   │   ├── BookList.jsx
+│   │   ├── BookCard.jsx
+│   │   ├── BookDetails.jsx
+│   │   ├── Loader.jsx
+│   │   └── ErrorMessage.jsx
+│   ├── services/
+│   │   └── bookService.js
+│   ├── App.jsx
+│   ├── main.jsx
+│   └── index.css
+├── package.json
+├── tailwind.config.js
+└── README.md
+```
+
+---
+
+## 🧩 Core Features
+
+### 🔍 Search Functionality
+Users can search for books by title, author, or keywords using the Google Books API.
+
+### 📖 Book List Display
+Search results include book covers, titles, and authors in a responsive grid layout.
+
+### 📘 Book Details View
+Detailed information is displayed for each book, including:
+- Book cover
+- Title and author(s)
+- Description/summary
+- Publication date
+- Google Books link
+
+### 🧠 API Integration
+Data is fetched using the **Google Books API**:
+```
+https://www.googleapis.com/books/v1/volumes?q={searchTerm}
+```
+No authentication required for basic requests.
+
+### 💅 Responsive Design
+Styled with **Tailwind CSS** for a modern, mobile-friendly user experience.
+
+
+## 🧰 Tech Stack
+
+| Technology | Purpose |
+|-------------|----------|
+| React (Vite) | Frontend Framework |
+| Tailwind CSS | Styling & Responsiveness |
+| Google Books API | Book Data Source |
+| React Router DOM | Navigation between pages |
+| Vercel / Netlify | Deployment Platform |
+
+---
+
+## 🏗️ Development Plan
+
+| Week | Milestone | Description |
+|------|------------|-------------|
+| 1 | **Project Setup** | Initialize React + Tailwind project, structure folders, test API |
+| 2 | **Core Search Functionality** | Build `SearchBar` and connect to API |
+| 3 | **Book List & UI Enhancements** | Add `BookList` and `BookCard` with responsive layout |
+| 4 | **Book Details Page** | Add routing and `BookDetails` component |
+| 5 | **Final Touches & Deployment** | Optimize, test, and deploy the app |
+
+---
+
+## 🧑‍💻 Getting Started
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/your-username/book-library.git
+cd book-library
+```
+
+### 2️⃣ Install Dependencies
+```bash
+npm install
+```
+
+### 3️⃣ Run the Development Server
+```bash
+npm run dev
+```
+
+Visit **http://localhost:5173** to view the app.
+
+---
+
+## 🧾 Example API Service
+
+```javascript
+// src/services/bookService.js
+export const fetchBooks = async (query) => {
+  const response = await fetch(
+    `https://www.googleapis.com/books/v1/volumes?q=${query}`
+  );
+  const data = await response.json();
+  return data.items || [];
+};
+
+
+
+## 💡 Author
+
+**Brian Richu**  
+💼 FrontEnd Web Developer | 🌍 Nairobi, Kenya  
+🎯 Mission: *To become the best in what I do, living with integrity, fostering love and compassion, and holding myself accountable for creating positive change.*
+
+---
+
+
