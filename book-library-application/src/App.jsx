@@ -6,13 +6,11 @@ import BookDetails from "./pages/BookDetails";
 
 function App() {
   return (
-    <Router>
       <Routes>
-        <Route path="/" element={<Home />} />           {/* Figma landing page */}
-        <Route path="/books" element={<BookList />} />   {/* Existing list */}
-        <Route path="/book/:id" element={<BookDetails />} /> {/* Details page */}
+        <Route path="/" element={<Home />} />
+        <Route path="/books" element={<BookList />} />
+        <Route path="/book/:id" element={<BookDetails />} />
       </Routes>
-    </Router>
   );
 }
 

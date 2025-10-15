@@ -1,65 +1,62 @@
-// src/components/BookDetails.jsx
-
+// src/pages/BookDetails.jsx
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
-import Loader from "../components/Loader";
+import { useParams, Link } from "react-router-dom";
 
-const BookDetails = () => {
-  const { id } = useParams(); // 📘 Extract book ID from URL
-  const [book, setBook] = useState(null); // Book details
-  const [loading, setLoading] = useState(true); // Loading state
+export default function BookDetails() {
+  const { id } = useParams();
+  const [book, setBook] = useState(null);
+  const [error, setError] = useState(null);
 
-  // 🚀 Fetch book details when component mounts
   useEffect(() => {
-    const fetchBook = async () => {
+    const fetchBookDetails = async () => {
       try {
-        const response = await axios.get(
-          `https://www.googleapis.com/books/v1/volumes/${id}`
-        );
-        setBook(response.data);
-      } catch (error) {
-        console.error("Error fetching book details:", error);
-      } finally {
-        setLoading(false);
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
+        if (!res.ok) throw new Error("Failed to fetch book details");
+        const data = await res.json();
+        setBook(data);
+      } catch (err) {
+        setError("Unable to load book details.");
       }
     };
-
-    fetchBook();
+    fetchBookDetails();
   }, [id]);
 
-  if (loading) return <Loader />;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (!book) return <p className="text-center py-10">Loading...</p>;
 
-  if (!book) return <p className="text-center text-red-500">Book not found.</p>;
-
-  const info = book.volumeInfo;
+  const { volumeInfo } = book;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="flex flex-col md:flex-row gap-6 bg-white rounded-lg shadow-lg p-4">
-        {/* 🖼️ Book cover image */}
+    <div className="min-h-screen bg-gray-50 p-6">
+      <Link to="/books" className="text-indigo-600 text-sm hover:underline">
+        ← Back to list
+      </Link>
+
+      <div className="mt-4 flex flex-col md:flex-row gap-6">
         <img
-          src={info.imageLinks?.thumbnail || "https://via.placeholder.com/150"}
-          alt={info.title}
-          className="w-48 h-auto mx-auto md:mx-0 rounded"
+          src={volumeInfo.imageLinks?.thumbnail || "https://via.placeholder.com/150"}
+          alt={volumeInfo.title}
+          className="w-48 h-64 object-cover rounded shadow"
         />
 
-        {/* 📄 Book details */}
         <div>
-          <h2 className="text-2xl font-bold mb-2">{info.title}</h2>
-          <p className="text-gray-700 mb-2">
-            <strong>Author(s):</strong> {info.authors?.join(", ")}
+          <h1 className="text-2xl font-semibold">{volumeInfo.title}</h1>
+          <p className="text-gray-600 mt-1">{volumeInfo.authors?.join(", ")}</p>
+
+          <p className="mt-4 text-sm text-gray-700 leading-relaxed">
+            {volumeInfo.description || "No description available."}
           </p>
-          <p className="text-gray-700 mb-2">
-            <strong>Published:</strong> {info.publishedDate}
-          </p>
-          <p className="text-gray-600 mt-4">
-            {info.description || "No description available."}
-          </p>
+
+          <a
+            href={volumeInfo.previewLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-block text-sm text-white bg-indigo-600 px-4 py-2 rounded hover:bg-indigo-700"
+          >
+            Preview Book
+          </a>
         </div>
       </div>
     </div>
   );
-};
-
-export default BookDetails;
+}
