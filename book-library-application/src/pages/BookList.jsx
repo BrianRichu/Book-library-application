@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { fetchBooks } from "../services/bookService";
 import { Link } from "react-router-dom";
 import debounce from "lodash.debounce";
-import Loader from "./Loader";
+import Loader from "../components/Loader";
 
 const BookList = () => {
   // 🔍 States to manage user input and API data

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Loader from "./Loader";
+import Loader from "../components/Loader";
 
 const BookDetails = () => {
   const { id } = useParams(); // 📘 Extract book ID from URL

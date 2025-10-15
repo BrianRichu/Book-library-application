@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import BookList from "./components/BookList";
-import BookDetails from "./components/BookDetails";
+import BookList from "./pages/BookList";
+import BookDetails from "./pages/BookDetails";
 
 function App() {
   return (
