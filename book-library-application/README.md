@@ -20,17 +20,22 @@ The app is built as part of a **5-week learning project**, with weekly goals and
 ## 🗂️ Project Structure
 
 ```
-book-library/
-├── src/
-│   ├── components/
-│   │   ├── SearchBar.jsx
-│   │   ├── BookList.jsx
-│   │   ├── BookCard.jsx
-│   │   ├── BookDetails.jsx
-│   │   ├── Loader.jsx
-│   │   └── ErrorMessage.jsx
-│   ├── services/
-│   │   └── bookService.js
+src/
+├── pages/
+│   ├── Home.jsx              # Figma-style landing page
+│   ├── BookList.jsx          # Existing list of books 
+│   └── BookDetails.jsx       # Existing book details page
+│
+├── components/
+│   ├── Navbar.jsx
+│   ├── SearchBar.jsx
+│   ├── TopBooks.jsx
+│   ├── Categories.jsx
+│   ├── BookCard.jsx
+│
+└── services/
+    └── bookService.js
+
 │   ├── App.jsx
 │   ├── main.jsx
 │   └── index.css
