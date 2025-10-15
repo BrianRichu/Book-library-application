@@ -1,16 +1,15 @@
 // src/components/Navbar.jsx
-
 import { Link } from "react-router-dom";
 
-const Navbar = () => (
-  <nav className="bg-blue-600 text-white py-4 shadow">
-    <div className="max-w-5xl mx-auto flex justify-between items-center px-4">
-      {/* 🏠 App name - links back to home */}
-      <Link to="/" className="text-xl font-bold hover:text-gray-200">
-        📚 Book Library
-      </Link>
-    </div>
-  </nav>
-);
-
-export default Navbar;
+export default function Navbar() {
+  return (
+    <nav className="flex justify-between items-center">
+      <h1 className="text-lg font-semibold">📚 BookFinder</h1>
+      <div className="flex space-x-4 text-sm">
+        <Link to="/" className="hover:underline">Home</Link>
+        <Link to="/books" className="hover:underline">Main</Link>
+        <Link to="/book/1" className="hover:underline">Details</Link>
+      </div>
+    </nav>
+  );
+}
