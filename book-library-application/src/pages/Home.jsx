@@ -3,12 +3,11 @@ import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import BookCard from "../components/BookCard";
+import axios from "axios";
 
-/* 🧠 POINTER NOTES:
-   - Displays a hero section with a title + search bar.
-   - Shows "Top Books" (fetched from Google Books API).
-   - Shows "Categories" with books under each category.
-   - Keeps layout clean and matches the Figma feel.
+/* POINTERS:
+   - Home uses SearchBar in inline mode: pass onSearch to fetch results without navigating.
+   - TopBooks & categories use initial fetch on mount.
 */
 
 export default function Home() {
@@ -16,33 +15,56 @@ export default function Home() {
   const [categoryBooks, setCategoryBooks] = useState({});
   const [loading, setLoading] = useState(true);
   const categories = ["Fiction", "Science", "Fantasy", "Business"];
+  const [searchResults, setSearchResults] = useState([]); // results from inline search
+  const [searching, setSearching] = useState(false);
 
-  // 🧩 Fetch top books and books per category
   useEffect(() => {
-    const fetchBooks = async () => {
+    const fetchInitial = async () => {
       try {
-        // Fetch Top Books
-        const topRes = await fetch("https://www.googleapis.com/books/v1/volumes?q=bestseller&maxResults=8");
-        const topData = await topRes.json();
-        setTopBooks(topData.items || []);
+        setLoading(true);
+        // top books
+        const topRes = await axios.get(
+          `https://www.googleapis.com/books/v1/volumes?q=bestseller&maxResults=8`
+        );
+        setTopBooks(topRes.data.items || []);
 
-        // Fetch books by category
+        // categories
         const categoryResults = {};
-        for (const category of categories) {
-          const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${category}&maxResults=4`);
-          const data = await res.json();
-          categoryResults[category] = data.items || [];
-        }
+        await Promise.all(categories.map(async (category) => {
+          const res = await axios.get(
+            `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(category)}&maxResults=4`
+          );
+          categoryResults[category] = res.data.items || [];
+        }));
         setCategoryBooks(categoryResults);
-      } catch (error) {
-        console.error("Error fetching books:", error);
+      } catch (err) {
+        console.error("Home initial fetch error:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBooks();
+    fetchInitial();
   }, []);
+
+  // Inline search handler passed to SearchBar
+  const handleInlineSearch = async (term) => {
+    try {
+      setSearching(true);
+      setSearchResults([]);
+      const res = await axios.get(
+        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(term)}&maxResults=16`
+      );
+      const items = res.data.items || [];
+      setSearchResults(items);
+      // optional: show searchResults in a separate section or override TopBooks view
+    } catch (err) {
+      console.error("Home search error:", err);
+      setSearchResults([]);
+    } finally {
+      setSearching(false);
+    }
+  };
 
   if (loading) return <p className="text-center py-10">Loading content...</p>;
 
@@ -50,26 +72,44 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 px-4 py-6">
       <Navbar />
 
-      {/* Hero Section */}
       <div className="mt-6 text-center">
         <h1 className="text-3xl font-bold leading-tight text-gray-800">
           Discover Your Next <span className="text-indigo-600">Favorite Book</span>
         </h1>
-        <p className="text-gray-500 mt-2 text-sm">
-          Search, explore, and read thousands of books from around the world.
-        </p>
+        <p className="text-gray-500 mt-2 text-sm">Search, explore, and read thousands of books.</p>
+
+        {/* Inline Search: pass handler so Home fetches results without navigating */}
         <div className="mt-4 max-w-lg mx-auto">
-          <SearchBar />
+          <SearchBar onSearch={handleInlineSearch} />
         </div>
       </div>
 
-      {/* Top Books Section */}
+      {/* If an inline search was made, show these results first */}
+      {searchResults.length > 0 && (
+        <section className="mt-8">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-semibold text-xl">Search Results</h2>
+            <span className="text-sm text-gray-500">showing {searchResults.length} results</span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {searchResults.map((b) => (
+              <BookCard
+                key={b.id}
+                title={b.volumeInfo.title}
+                author={b.volumeInfo.authors?.join(", ")}
+                thumbnail={b.volumeInfo.imageLinks?.thumbnail}
+                id={b.id}
+              />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Top Books */}
       <section className="mt-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-semibold text-xl">🔥 Top Books</h2>
-          <span className="text-sm text-gray-500 hover:underline cursor-pointer">
-            see more...
-          </span>
+          <span className="text-sm text-gray-500 hover:underline cursor-pointer">see more...</span>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -85,14 +125,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Category Sections */}
+      {/* Categories */}
       {categories.map((category) => (
         <section key={category} className="mt-10">
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-semibold text-xl">{category}</h2>
-            <span className="text-sm text-gray-500 hover:underline cursor-pointer">
-              see more...
-            </span>
+            <span className="text-sm text-gray-500 hover:underline cursor-pointer">see more...</span>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
