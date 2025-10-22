@@ -81,7 +81,7 @@ Styled with **Tailwind CSS** for a modern, mobile-friendly user experience.
 | Tailwind CSS | Styling & Responsiveness |
 | Google Books API | Book Data Source |
 | React Router DOM | Navigation between pages |
-| Vercel / Netlify | Deployment Platform |
+| Google Chrome| Deployment Platform |
 
 ---
 
@@ -108,6 +108,7 @@ cd book-library
 ### 2️⃣ Install Dependencies
 ```bash
 npm install
+
 ```
 
 ### 3️⃣ Run the Development Server
