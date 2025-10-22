@@ -101,7 +101,7 @@ Styled with **Tailwind CSS** for a modern, mobile-friendly user experience.
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/your-username/book-library.git
+git https://github.com/BrianRichu/Book-library-application.git
 cd book-library
 ```
 
